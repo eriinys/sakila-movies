@@ -50,7 +50,7 @@ public class DB {
         return actors;
     }
 
-    public List<Films> getFilmByActor(String firstName, String lastName){
+    public List<Films> getFilmByActorName(String firstName, String lastName){
         films = new ArrayList<>();
         String sql = "SELECT DISTINCT film.title FROM film " +
                 "JOIN film_actor ON film.film_id = film_actor.film_id " +
@@ -87,4 +87,36 @@ public class DB {
         return films;
     }
 
+    public List<Films> getFilmByActorId(int actorId){
+        films = new ArrayList<>();
+        String sql = "SELECT DISTINCT film.title FROM film " +
+                "JOIN film_actor ON film.film_id = film_actor.film_id " +
+                "WHERE film_actor.actor_id = ?";
+
+        try(Connection conn = dataSource.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setInt(1, actorId);
+
+            try(ResultSet rs = ps.executeQuery()){
+                while(rs.next()){
+                    String title = rs.getString("title");
+
+                    Films film = new Films(title);
+                    films.add(film);
+                }
+            }
+
+            if(films.isEmpty()){
+                System.out.println("No matching film found.");
+            } else {
+                for (Films f : films){
+                    System.out.println(f.getTitle());
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return films;
+    }
 }
