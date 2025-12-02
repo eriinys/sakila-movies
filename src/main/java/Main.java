@@ -9,7 +9,7 @@ public class Main {
         }
 
         DB db = new DB (args[0], args[1]);
-        UI ui = new UI(db);
+        Ui ui = new Ui(db);
         ui.HomeScreen();
     }
 }
