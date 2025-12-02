@@ -8,8 +8,6 @@ import java.util.*;
 
 public class DB {
     private final BasicDataSource dataSource;
-    private List<Actors> actors;
-    private List<Films> films;
 
     public DB(String user, String password) {
         this.dataSource = new BasicDataSource();
@@ -19,7 +17,7 @@ public class DB {
     }
 
     public List<Actors> getLastName(String lastName){
-        actors = new ArrayList<>();
+        List<Actors> actors = new ArrayList<>();
         String sql = "SELECT DISTINCT first_name, last_name FROM actor";
 
         try(Connection conn = dataSource.getConnection();
@@ -35,15 +33,6 @@ public class DB {
                     actors.add(actor);
                 }
             }
-
-                if(actors.isEmpty()){
-                    System.out.println("No matching actor found.");
-                } else {
-                    for (Actors a : actors){
-                        System.out.println(a.getFirstName() + " " + a.getLastName());
-                    }
-                }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -51,7 +40,7 @@ public class DB {
     }
 
     public List<Films> getFilmByActorName(String firstName, String lastName){
-        films = new ArrayList<>();
+        List<Films> films = new ArrayList<>();
         String sql = "SELECT DISTINCT film.title FROM film " +
                 "JOIN film_actor ON film.film_id = film_actor.film_id " +
                 "JOIN actor ON film_actor.actor_id =  actor.actor_id " +
@@ -72,15 +61,6 @@ public class DB {
                     films.add(film);
                 }
             }
-
-            if(films.isEmpty()){
-                System.out.println("No matching film found.");
-            } else {
-                for (Films f : films){
-                    System.out.println(f.getTitle());
-                }
-            }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -88,7 +68,7 @@ public class DB {
     }
 
     public List<Films> getFilmByActorId(int actorId){
-        films = new ArrayList<>();
+        List<Films> films = new ArrayList<>();
         String sql = "SELECT DISTINCT film.title FROM film " +
                 "JOIN film_actor ON film.film_id = film_actor.film_id " +
                 "WHERE film_actor.actor_id = ?";
@@ -105,15 +85,6 @@ public class DB {
                     films.add(film);
                 }
             }
-
-            if(films.isEmpty()){
-                System.out.println("No matching film found.");
-            } else {
-                for (Films f : films){
-                    System.out.println(f.getTitle());
-                }
-            }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
